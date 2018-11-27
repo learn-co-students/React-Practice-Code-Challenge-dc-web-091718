@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 
 const Sushi = ({sushi, eat}) => {
   return (
@@ -9,7 +9,7 @@ const Sushi = ({sushi, eat}) => {
         sushi.eaten ?
           null
         :
-          <img src={sushi.img_url} width="100%" />
+          <img src={sushi.img_url} width="100%" alt={sushi.name}/>
       }
     </div>
     <h4 className="sushi-details">

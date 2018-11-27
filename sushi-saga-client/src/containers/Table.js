@@ -8,14 +8,6 @@ const Table = (props) => {
     })
   }
 
-  const amountSpent = () => {
-    let amount = 0
-    for(const plate of props.plates) {
-      amount += plate.price
-    }
-    return amount
-  }
-
   return (
     <Fragment>
       <h1 className="remaining">

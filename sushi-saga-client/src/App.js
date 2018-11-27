@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SushiContainer from './containers/SushiContainer';
 import Table from './containers/Table';
+import FundsForm from './components/FundsForm'
 
 // Endpoint!
 const API = "http://localhost:3000/sushis"
@@ -13,7 +14,8 @@ class App extends Component {
       sushis: [],
       fourSushis: [],
       eatenSushis: [],
-      balance: 50
+      balance: 50,
+      toAdd: 0
     }
   }
 
@@ -32,29 +34,41 @@ class App extends Component {
     })
     this.setState({
       sushis: setupSushis,
-      fourSushis: this.pickFourSushi(sushis)
+      fourSushis: this.nextFourSushi(setupSushis)
     })
   }
 
-  pickFourSushi = (sushiStack) => {
-    let fourSushi = []
+  nextFourSushi = (sushis) => {
+    let sushiToReturn = []
 
-    //Todo: Make sure you can't have the same sushi on teh conveyer twice.
-    if (sushiStack.length > 4) {
-      fourSushi.push(sushiStack[Math.floor((Math.random() * sushiStack.length))])
-      fourSushi.push(sushiStack[Math.floor((Math.random() * sushiStack.length))])
-      fourSushi.push(sushiStack[Math.floor((Math.random() * sushiStack.length))])
-      fourSushi.push(sushiStack[Math.floor((Math.random() * sushiStack.length))])
+    if (this.state.fourSushis.length === 4) {
+      const lastSushi = this.state.fourSushis.pop()
+      const lastSushiIndex = sushis.indexOf(lastSushi)
+
+      if (sushis.length >= lastSushiIndex + 5) {
+        sushiToReturn = sushis.slice(lastSushiIndex + 1, lastSushiIndex + 5)
+      } else {
+        // Find the remaining # of sushis
+        // Add that number to sushiToReturn
+        // Take the next x number from the top again and add to sush to return till there are four.
+        const remainingSushi = sushis.length - (lastSushiIndex + 5)
+        if (remainingSushi < 0) {
+          sushiToReturn = sushis.slice(0,4)
+        } else {
+          // We don't seem to hit this. Not sure why.
+        }
+      }
+
     } else {
-      fourSushi = sushiStack
+      sushiToReturn = sushis.slice(0,4)
     }
 
-    return fourSushi
+    return sushiToReturn
   }
 
   moreSushi = () => {
     this.setState({
-      fourSushis: this.pickFourSushi(this.state.sushis)
+      fourSushis: this.nextFourSushi(this.state.sushis)
     })
   }
 
@@ -71,11 +85,27 @@ class App extends Component {
     }
   }
 
+  addFunds = (event) => {
+    event.preventDefault()
+
+    this.setState({
+      balance: this.state.balance + parseInt(this.state.toAdd, 10),
+      toAdd: 0
+    })
+  }
+
+  changeFundsForm = (event) => {
+    this.setState({
+      toAdd: event.target.value
+    })
+  }
+
   render() {
     return (
       <div className="app">
+        <FundsForm onSubmit={this.addFunds} onChange={this.changeFundsForm} currentValue={this.state.toAdd}/>
         <SushiContainer sushis={this.state.fourSushis} moreSushi={this.moreSushi} eatSushi={this.eat}/>
-        <Table plates={this.state.eatenSushis} balance={this.state.balance}/>
+        <Table plates={this.state.eatenSushis} balance={this.state.balance} />
       </div>
     );
   }
