@@ -73,15 +73,18 @@ class App extends Component {
   }
 
   eat = eatenSushi => {
-    if (this.state.balance >= eatenSushi.price) {
-      const allSushi = this.state.sushis.slice()
-      const index = allSushi.indexOf(eatenSushi)
-      allSushi[index].eaten = true
-      this.setState({
-        sushis: allSushi,
-        eatenSushis: [...this.state.eatenSushis, eatenSushi],
-        balance: this.state.balance - eatenSushi.price
-      })
+    if(!this.state.eatenSushis.includes(eatenSushi))
+    {
+      if (this.state.balance >= eatenSushi.price) {
+        const allSushi = this.state.sushis.slice()
+        const index = allSushi.indexOf(eatenSushi)
+        allSushi[index].eaten = true
+        this.setState({
+          sushis: allSushi,
+          eatenSushis: [...this.state.eatenSushis, eatenSushi],
+          balance: this.state.balance - eatenSushi.price
+        })
+      }
     }
   }
 
