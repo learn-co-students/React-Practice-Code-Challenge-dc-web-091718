@@ -37,7 +37,7 @@ class App extends Component {
 	}
 
 	nextPage = () => {
-		let nextPage = (this.state.page + 1) % 25
+		let nextPage = (this.state.page + 1) % (sushis.length/4)
 		this.setState({ page: nextPage })
 	}
 
